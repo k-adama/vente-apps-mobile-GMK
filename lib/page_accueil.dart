@@ -1,5 +1,24 @@
 import 'package:flutter/material.dart';
 
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      initialRoute: '/',
+      routes: {},
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.amber,
+      ),
+      home: const HomePage(key: Key('')),
+    );
+  }
+}
+
 class HomePage extends StatefulWidget {
   const HomePage({required Key key}) : super(key: key);
 
@@ -9,18 +28,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int currentState = 0;
-  // List<Widget> widgets = [const HomeScreen(key: null,), ProfileScreen(key: null,)];
-  List<String> titleString = ["Accueil", "Mon compte"];
-  String username = "";
-  Widget profilePhoto = Container(
-    height: 100,
-    width: 100,
-    decoration: BoxDecoration(
-      color: Colors.black,
-      borderRadius: BorderRadius.circular(50),
-    ),
-  );
+  int _compteurPanier = 0;
+
+  void _ajouterAuPanier() {
+    setState(() {
+      _compteurPanier++;
+    });
+  }
 
   @override
   void initState() {
@@ -32,99 +46,85 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: Drawer(
-          child: ListView(
+      appBar: AppBar(
+        backgroundColor: Colors.teal,
+        title: const Text('Bienvenu'),
+        centerTitle: true,
+        actions: <Widget>[
+          Stack(
+            alignment: Alignment.center,
             children: <Widget>[
-              DrawerHeader(
-                child: Column(
-                  children: <Widget>[
-                    profilePhoto,
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text("@$username"),
-                  ],
+              IconButton(
+                icon: const Icon(Icons.shopping_cart),
+                onPressed: () {},
+              ),
+              Positioned(
+                top: 8.0,
+                right: 8.0,
+                child: Text(
+                  '$_compteurPanier',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              ListTile(
-                title: const Text("Produits"),
-                trailing: const Icon(Icons.launch),
-                onTap: () {},
-              ),
-              ListTile(
-                title: const Text("Paramètres"),
-                trailing: const Icon(Icons.settings),
-                onTap: () {},
-              ),
-              ListTile(
-                title: const Text("Me déconnecter"),
-                trailing: const Icon(Icons.power_settings_new),
-                onTap: () {},
               ),
             ],
           ),
-        ),
-        appBar: AppBar(
-          backgroundColor: Colors.teal,
-          title: Text(titleString[currentState]),
-          centerTitle: true,
-          actions: <Widget>[
-            IconButton(icon: const Icon(Icons.notifications), onPressed: () {}),
-          ],
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: BottomAppBar(
-          color: Colors.teal,
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 12,
-          child: SizedBox(
-            height: 60,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  IconButton(
-                    icon: const Icon(Icons.home),
-                    color: currentState == 0 ? Colors.white : Colors.white54,
-                    onPressed: () {
-                      setState(() {
-                        currentState = 0;
-                      });
-                    },
-                    iconSize: 40,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.person),
-                    color: currentState == 1 ? Colors.white : Colors.white54,
-                    onPressed: () {
-                      setState(() {
-                        currentState = 1;
-                      });
-                    },
-                    iconSize: 40,
-                  )
-                ],
+        ],
+        // actions: <Widget>[
+        //   IconButton(icon: const Icon(Icons.notifications), onPressed: () {}),
+        // ],
+      ),
+      body: Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Image.asset(
+              'assets/images/mangue.jpg',
+              height: 200.0,
+              fit: BoxFit.cover,
+            ),
+            const SizedBox(height: 16.0),
+            const Text(
+              'Titre produit',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-        ),
-        body: const Center(
-          child: Text(
-            'Martail, il faut te concentrer et laisser la rosette ! Tu dors trop dedans !',
-            style: TextStyle(
-              fontSize: 25,
-              color: Colors.blue,
+            const SizedBox(height: 8.0),
+            const Text(
+              ' Description',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.normal,
+              ),
             ),
-          ),
-        ));
+            const SizedBox(height: 16.0),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _ajouterAuPanier();
+                    },
+                    child: const Text('Ajouter au panier'),
+                  ),
+                ),
+                const SizedBox(width: 16.0),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: const Text('Acheter'),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
-
-  // void logout() async {
-  //   await storage.delete(key: "token");
-  //   Navigator.pushAndRemoveUntil(
-  //       context,
-  //       MaterialPageRoute(builder: (context) => WelcomePage()),
-  //       (route) => false);
-  // }
 }
